@@ -1,7 +1,14 @@
 import serial
 import re
 from time import sleep
-import color_processing_library
+from collections import deque
+import cv2
+import argparse
+import imutils
+import cv2
+import urllib
+import numpy as np
+
 value=serial.Serial('COM13',9600, timeout=None)
 print("enter the coordinates")
 coords=input()#user input
@@ -17,8 +24,19 @@ sleep(0.1)
 value.write(y.encode())
 feedback=value.read().decode('ascii')
 print(feedback)
-while True: #for 4 node bots#
-     _, frame = camera.read()
+lower = {'red': (0,110,120), 'green': (66, 122, 129), 'blue': (97, 100, 117), 'yellow': (23, 59, 119)}
+# assign new item lower['blue'] = (93, 10, 0)
+upper = {'red': (10,255,255), 'green': (86, 255, 255), 'blue': (117, 255, 255), 'yellow': (54, 255, 255)}
+# define standard colors for circle around the object
+colors = {'red': (0, 0, 255), 'green': (0, 255, 0), 'blue': (255, 0, 0), 'yellow': (0, 255, 217), 'white': (255,255,255)}
+check='0'
+i=0
+counter=0
+color='0'
+camera = cv2.VideoCapture(0)
+while True:
+    #for 4 node bots#
+    (_, frame) = camera.read()
     blurred = cv2.GaussianBlur(frame, (11, 11), 0)
     hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
     for key, value in upper.items():
@@ -34,23 +52,30 @@ while True: #for 4 node bots#
             for (x, y, r) in circles:
                 cv2.circle(frame, (x, y), r, (0, 255, 0), 4)
                 cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+                cv2.imshow('out',frame)
+                print(key)
                 color=key
                 sleep(1)
-    if(key!=check)
-        check=key
-        print(key)
-        i++
-        value.write(color.encode())
-        if(i=4)
-            break
-            counter+1
-if(counter=1)
-    break
-    
-    while 1:
-        feedback=value.read().decode('ascii')
-        if(feedback==1):
-            break
+            if key!=check:
+                check=key
+                print(key)
+                i+=1
+                value.write(key.encode())
+                if(i==4):
+                    break
+                    counter+=1
+            if(counter==1):
+                break
+
+   #while 1:
+        
+    #    feedback=value.read().decode('ascii')
+     #   if(feedback==1):
+      #      break'''
+   
+
+
+
 
 
 
