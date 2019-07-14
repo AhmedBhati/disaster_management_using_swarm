@@ -19,15 +19,17 @@ ap.add_argument("-b", "--buffer", type=int, default=64,
 args = vars(ap.parse_args())'''
 dup = []
 # define the lower and upper boundaries of the colors in the HSV color space
-lower = {'green': (66, 122, 129), 'blue': (110, 100, 117), 'yellow': (48, 30, 119)
-         ,'orange': (0, 110, 150)}
+lower = {'green': (55, 60, 60), 'yellow': (30, 150, 150)
+    , 'orange': (0, 110, 150),'blue':(90,200,200)}
 # assign new item lower['blue'] = (93, 10, 0)
-upper = {'green': (86, 255, 255), 'blue': (130, 255, 255), 'yellow': (58, 200, 255)
-         ,'orange': (35, 255, 255)}
-
+upper = {'green': (80, 255, 255), 'yellow': (50, 255, 255)
+    , 'orange': (25, 255, 255),'blue':(110,255,255)}
+'''lower = {'blue':(90,200,200)}
+# assign new item lower['blue'] = (93, 10, 0)
+upper = {'blue':(110,255,255)}'''
 # define standard colors for circle around the object
-colors = {'red': (0, 0, 255), 'green': (0, 255, 0), 'blue': (255, 0, 0), 'yellow': (0, 255, 217), 'white': (255,255,255)
-          ,'orange': (0, 140, 255)}
+colors = { 'green': (0, 255, 0), 'yellow': (0, 255, 217)
+    , 'orange': (0, 140, 255),'blue':(255,100,0)}
 
 # pts = deque(maxlen=args["buffer"])
 
@@ -45,10 +47,10 @@ else:
 while True:
     _, frame = camera.read()
 
-    roi = frame[0:480,0:640]    #0:480,300:400
+    roi = frame[0:480, 0:640]  # 0:480,300:400
     # resize the frame, blur it, and convert it to the HSV
     # color space
-    #frame = imutils.resize(frame, width=600)
+    # frame = imutils.resize(frame, width=600)
 
     hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     # for each color in dictionary check object in frame
@@ -62,18 +64,17 @@ while True:
         dilate_element = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 6))
         eroded_mask = cv2.erode(blurred_mask, erode_element)
         dilated_mask = cv2.dilate(eroded_mask, dilate_element)
-        #cv2.imshow('dilated_mask',dilated_mask)
-        cv2.imshow('eroded_mask',eroded_mask)
+        cv2.imshow('eroded_mask', eroded_mask)
         # find contours in the mask and initialize the current
         # (x, y) center of the ball
         circles = cv2.HoughCircles(dilated_mask, cv2.HOUGH_GRADIENT, 1.5, 100)
-        #cv2.imshow("hough_circles",circles)
+        # cv2.imshow("hough_circles",circles)
         if circles is not None:
             circles = np.round(circles[0, :]).astype("int")
             for (x, y, r) in circles:
                 cv2.circle(frame, (x, y), r, (0, 255, 0), 4)
                 cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-                #sleep(0)
+                # sleep(0)
                 if key not in dup:
                     print(key)
                 dup.append(key)
@@ -86,4 +87,3 @@ while True:
 
 # cleanup the camera and close any open windows
 camera.release()
- 
