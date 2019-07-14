@@ -19,10 +19,10 @@ ap.add_argument("-b", "--buffer", type=int, default=64,
 args = vars(ap.parse_args())'''
 dup = []
 # define the lower and upper boundaries of the colors in the HSV color space
-lower = {'green': (55, 60, 60), 'yellow': (30, 150, 150)
-    , 'orange': (0, 110, 150),'blue':(85,80,80)}
+lower = {'green': (65, 110, 110), 'yellow': (30, 100, 100)
+    , 'orange': (0, 110, 150),'blue':(100,90,100)}
 # assign new item lower['blue'] = (93, 10, 0)
-upper = {'green': (80, 255, 255), 'yellow': (50, 255, 255)
+upper = {'green': (80, 255, 255), 'yellow': (55, 255, 255)
     , 'orange': (25, 255, 255),'blue':(110,255,255)}
 '''lower = {'blue':(85,80,80)}
 # assign new item lower['blue'] = (93, 10, 0)
