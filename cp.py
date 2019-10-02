@@ -5,12 +5,15 @@ dup = []
 
 '''lower = {'green': (60, 96, 25)}
 upper = {'green': (80, 255, 255)}'''
-lower = {'green': (60, 96, 25), 'yellow': (27, 45, 137), 'orange': (0, 89, 142),'blue':(90,73,120)}
-upper = {'green': (80, 255, 255), 'yellow': (55, 255, 255), 'orange': (10, 255, 255),'blue':(110,255,255)}
-camera = cv2.VideoCapture(0)
+'''lower = {'green': (60, 39, 107), 'yellow': (27, 45, 137), 'orange': (0, 89, 142),'pink':(155,119,110)}
+upper = {'green': (80, 255, 255), 'yellow': (55, 255, 255), 'orange': (10, 255, 255),'pink':(179,255,255)}'''
+lower = {'orange': (0, 89, 255)}
+upper = { 'orange': (9, 255, 255)}
+camera = cv2.VideoCapture(1)
 while True:
     _, frame = camera.read()
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    roi = frame[0:480,260:300]
+    hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
     for key, value in upper.items():
         lower_blue = np.array(lower[key])
         upper_blue = np.array(upper[key])
@@ -36,15 +39,15 @@ while True:
             if radius > 20:
                 # draw the circle and centroid on the frame,
                 # then update the list of tracked points
-                cv2.circle(frame, (int(x), int(y)), int(radius),
+                cv2.circle(roi, (int(x), int(y)), int(radius),
                            (0, 255, 255), 2)
-                cv2.circle(frame, center, 5, (0, 0, 255), -1)
+                cv2.circle(roi, center, 5, (0, 0, 255), -1)
                 if key not in dup:
                     print(key)
                     dup.append(key)
 
         cv2.imshow("output1", mask)
-        cv2.imshow("output2", frame)
+        cv2.imshow("output2", roi)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
