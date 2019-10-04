@@ -1,8 +1,8 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-char text[9] = "";
-RF24 radio(7, 8); // CE, CSN
+char text[20] = "";
+RF24 radio(48, 49); // CE, CSN
 const byte address[6] = "00001";
 void setup() {
   Serial.begin(9600);
